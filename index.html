@@ -9,10 +9,10 @@
 <body>
 <header class="top"><div class="mark">g</div><div class="brand">gather</div><span class="crumb">/</span><div class="file">chocolate-analysis.ipynb</div><div class="topright"><span class="badge">DEMO · editable Python</span><span>⋮</span></div></header>
 <main class="layout">
-<section class="head"><div><div class="eyebrow">Code gathering tools · editable notebook · browser Python</div><h1>Make sense of the notebook mess.</h1><p>Edit cells and run Python in the browser, or select a result to gather its code slice.</p></div><div class="headright"><span class="pill">47 cells in paper scenario</span><span class="pill">Illustrative revision history</span></div></section>
+<section class="head"><div><div class="eyebrow">Code gathering tools · editable notebook · browser Python</div><h1>Make sense of the notebook mess.</h1><p>Edit cells and run Python in the browser, or select a result to gather its code slice.</p></div><div class="headright"><span class="pill">Chocolate sample · 24 rows</span><span class="pill">Runs on open · browser Python</span></div></section>
 <section class="card notebook"><div class="nbbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="nbtitle">Chocolate quality analysis</span><button class="add-cell" id="addCellBtn" type="button">＋ Add cell</button><button class="run-all" id="runAllBtn" type="button">▶ Run all cells</button><span class="runtime-status" id="runtimeStatus">Python not started · local runtime</span><span class="nbmeta">paper scenario · sample data</span></div><div class="nbbody" id="cells"></div></section>
 <aside class="side">
-<section class="card panel"><div class="panelhead"><h2>Gather selected results</h2><span class="count" id="selectedCount">0 selected</span><button class="textbtn" id="clearBtn" type="button" disabled>Clear</button></div><p class="hint">Choose outputs or variables. The notebook follows the actual runs and variable versions that produced them.</p><div id="targets"></div><div class="legend"><i class="swatch"></i> Included in current slice</div><div class="actions"><button class="btn primary" id="gatherBtn">Preview gathered notebook →</button><div class="actionrow"><button class="btn secondary" id="copyBtn">Gather to Clipboard</button><button class="btn secondary" id="revisionsBtn">Gather to Revisions</button></div></div><div class="slice-preview" id="preview"></div><div class="tip">Run history is saved in this browser. Gather follows recorded variable versions; preset revision cards remain illustrative.</div></section>
+<section class="card panel"><div class="panelhead"><h2>Gather selected results</h2><span class="count" id="selectedCount">0 selected</span><button class="textbtn" id="clearBtn" type="button" disabled>Clear</button></div><p class="hint">Choose outputs or variables. The notebook follows the actual runs and variable versions that produced them.</p><div id="targets"></div><div class="legend"><i class="swatch"></i> Included in current slice</div><div class="actions"><button class="btn primary" id="gatherBtn">Preview gathered notebook →</button><div class="actionrow"><button class="btn secondary" id="copyBtn">Gather to Clipboard</button><button class="btn secondary" id="revisionsBtn">Gather to Revisions</button></div></div><div class="slice-preview" id="preview"></div><div class="tip">Run history is saved in this browser. Revisions and gathered slices use recorded Python executions.</div></section>
 <section class="card panel"><div class="panelhead"><h2>About this demo</h2><span class="count">revibe</span></div><p class="hint">Python, pandas, and scikit-learn run in this browser. On first run, the Python runtime loads from the Pyodide CDN (about 40 MB); execution history stays in this browser.</p><div class="metricrow"><div class="metric"><strong>Editable</strong>Python cells</div><div class="metric"><strong>Browser</strong>runtime</div><div class="metric"><strong>Live</strong>run history</div></div></section>
 <div class="foot">Demo implementation · slicing uses the paper’s chocolate analysis scenario</div>
 </aside>
@@ -23,25 +23,20 @@
 <div class="modalback" id="notebookModal"><section class="modal notebook-modal"><div class="modalhead"><div><h2 id="notebookTitle">Gathered notebook preview</h2><p id="notebookSubtitle"></p></div><button class="close" id="closeNotebook" aria-label="Close preview">×</button></div><div class="nbpreview-scroll" id="notebookPreview"></div><div class="modalfoot"><span class="footnote">Preview only; no Jupyter kernel is created.</span><button class="btn secondary" id="notebookCopyBtn">Copy code</button><button class="btn primary" id="notebookDownloadBtn">Download .ipynb</button></div></section></div><script>const PYODIDE_VERSION='v314.0.7';
 const PYODIDE_BASE='https://cdn.jsdelivr.net/pyodide/v314.0.7/full/';
 const cells=[
- {id:'load',n:'In [8]',code:'import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.metrics import confusion_matrix\n\n# Small local chocolate sample; no external CSV needed\nrows = [\n    ("Maker 01", "Ghana", "45%", 2), ("Maker 02", "Peru", "50%", 2),\n    ("Maker 03", "Ecuador", "52%", 2), ("Maker 04", "Ghana", "55%", 2),\n    ("Maker 05", "Peru", "58%", 2), ("Maker 06", "Ecuador", "60%", 2),\n    ("Maker 07", "Ghana", "55%", 2), ("Maker 08", "Peru", "58%", 2),\n    ("Maker 09", "Ecuador", "62%", 3), ("Maker 10", "Ghana", "65%", 3),\n    ("Maker 11", "Peru", "68%", 3), ("Maker 12", "Ecuador", "70%", 3),\n    ("Maker 13", "Ghana", "72%", 3), ("Maker 14", "Peru", "75%", 3),\n    ("Maker 15", "Ecuador", "65%", 3), ("Maker 16", "Ghana", "72%", 3),\n    ("Maker 17", "Peru", "78%", 4), ("Maker 18", "Ecuador", "80%", 4),\n    ("Maker 19", "Ghana", "82%", 4), ("Maker 20", "Peru", "85%", 4),\n    ("Maker 21", "Ecuador", "88%", 4), ("Maker 22", "Ghana", "90%", 4),\n    ("Maker 23", "Peru", "80%", 4), ("Maker 24", "Ecuador", "85%", 4),\n]\ndf = pd.DataFrame(rows, columns=["Company", "Origin", "Cocoa Percent", "Rating"])',deps:[],vars:['df'],note:'Load sample dataset'},
- {id:'preview',n:'In [9]',code:'df.head()',deps:['load'],out:'table',note:'Preview table'},
- {id:'normalize',n:'In [10]',code:'def normalizeIt(value):\n    return float(value.strip("%")) / 100',deps:[],vars:['normalizeIt'],note:'Helper function'},
- {id:'clean',n:'In [11]',code:'df["Cocoa Percent"] = df["Cocoa Percent"].apply(normalizeIt)',deps:['load','normalize'],vars:['df'],note:'Normalize cocoa percent'},
- {id:'rating',n:'In [14]',code:'df["Rating"] = df["Rating"].astype(int)\n# rating values corrected after first model run',deps:['load'],vars:['df'],note:'Correct rating values'},
- {id:'hist',n:'In [12]',code:'quality_counts = df["Rating"].value_counts().sort_index()\nquality_counts.to_dict()',deps:['load','rating'],vars:['quality_counts'],out:'chart',note:'Rating distribution'},
- {id:'features',n:'In [15]',code:'X = df[["Cocoa Percent"]]\ny = df["Rating"]',deps:['clean','rating'],vars:['X','y'],note:'Prepare features'},
- {id:'split',n:'In [16]',code:'X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.25, random_state=42, stratify=y)',deps:['features'],vars:['X_train','X_test','y_train','y_test'],note:'Train/test split'},
- {id:'model',n:'In [19]',code:'dtree = DecisionTreeClassifier(max_depth=12, random_state=42)\ndtree.fit(X_train, y_train)',deps:['split'],vars:['dtree'],note:'Decision tree model'},
- {id:'pred',n:'In [20]',code:'predictions = dtree.predict(X_test)',deps:['model','split'],vars:['predictions'],out:'metrics',note:'Predictions'},
- {id:'conf',n:'In [21]',code:'confusion_matrix(y_test, predictions, labels=[2, 3, 4])',deps:['pred'],out:'matrix',note:'Confusion matrix'},
- {id:'debug',n:'In [22]',code:'print("rows in model input:", len(X))',deps:['features'],out:'console',note:'Debug output'}
+ {id:'load',n:'In [ ]',code:'import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.metrics import confusion_matrix\n\n# Small local chocolate sample; no external CSV needed\nrows = [\n    ("Maker 01", "Ghana", "45%", 2), ("Maker 02", "Peru", "50%", 2),\n    ("Maker 03", "Ecuador", "52%", 2), ("Maker 04", "Ghana", "55%", 2),\n    ("Maker 05", "Peru", "58%", 2), ("Maker 06", "Ecuador", "60%", 2),\n    ("Maker 07", "Ghana", "55%", 2), ("Maker 08", "Peru", "58%", 2),\n    ("Maker 09", "Ecuador", "62%", 3), ("Maker 10", "Ghana", "65%", 3),\n    ("Maker 11", "Peru", "68%", 3), ("Maker 12", "Ecuador", "70%", 3),\n    ("Maker 13", "Ghana", "72%", 3), ("Maker 14", "Peru", "75%", 3),\n    ("Maker 15", "Ecuador", "65%", 3), ("Maker 16", "Ghana", "72%", 3),\n    ("Maker 17", "Peru", "78%", 4), ("Maker 18", "Ecuador", "80%", 4),\n    ("Maker 19", "Ghana", "82%", 4), ("Maker 20", "Peru", "85%", 4),\n    ("Maker 21", "Ecuador", "88%", 4), ("Maker 22", "Ghana", "90%", 4),\n    ("Maker 23", "Peru", "80%", 4), ("Maker 24", "Ecuador", "85%", 4),\n]\ndf = pd.DataFrame(rows, columns=["Company", "Origin", "Cocoa Percent", "Rating"])',deps:[],vars:['df'],note:'Load sample dataset'},
+ {id:'preview',n:'In [ ]',code:'df.head()',deps:['load'],note:'Preview table'},
+ {id:'normalize',n:'In [ ]',code:'def normalizeIt(value):\n    return float(value.strip("%")) / 100',deps:[],vars:['normalizeIt'],note:'Helper function'},
+ {id:'clean',n:'In [ ]',code:'df["Cocoa Percent"] = df["Cocoa Percent"].apply(normalizeIt)',deps:['load','normalize'],vars:['df'],note:'Normalize cocoa percent'},
+ {id:'rating',n:'In [ ]',code:'df["Rating"] = df["Rating"].astype(int)\n# rating values corrected after first model run',deps:['load'],vars:['df'],note:'Correct rating values'},
+ {id:'hist',n:'In [ ]',code:'quality_counts = df["Rating"].value_counts().sort_index()\nquality_counts.to_dict()',deps:['load','rating'],vars:['quality_counts'],note:'Rating distribution'},
+ {id:'features',n:'In [ ]',code:'X = df[["Cocoa Percent"]]\ny = df["Rating"]',deps:['clean','rating'],vars:['X','y'],note:'Prepare features'},
+ {id:'split',n:'In [ ]',code:'X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.25, random_state=42, stratify=y)',deps:['features'],vars:['X_train','X_test','y_train','y_test'],note:'Train/test split'},
+ {id:'model',n:'In [ ]',code:'dtree = DecisionTreeClassifier(max_depth=12, random_state=42)\ndtree.fit(X_train, y_train)',deps:['split'],vars:['dtree'],note:'Decision tree model'},
+ {id:'pred',n:'In [ ]',code:'predictions = dtree.predict(X_test)',deps:['model','split'],vars:['predictions'],note:'Predictions'},
+ {id:'conf',n:'In [ ]',code:'confusion_matrix(y_test, predictions, labels=[2, 3, 4])',deps:['pred'],note:'Confusion matrix'},
+ {id:'debug',n:'In [ ]',code:'print("rows in model input:", len(X))',deps:['features'],note:'Debug output'}
 ];
 const targets=[{id:'pred',label:'predictions',type:'Variable'},{id:'hist',label:'Rating distribution',type:'Chart'},{id:'conf',label:'Confusion matrix',type:'Output'},{id:'preview',label:'Data preview',type:'Table'},{id:'debug',label:'Debug output',type:'Console'}];
-const sampleRevisions=[
- {time:'Preset example · current',depth:12,sample:true,cm:[['12','4','1'],['3','31','6'],['1','5','18']]},
- {time:'Preset example · 4 minutes earlier',depth:6,sample:true,cm:[['13','3','1'],['2','34','4'],['1','4','19']]},
- {time:'Preset example · 17 minutes earlier',depth:3,sample:true,cm:[['11','5','1'],['4','29','7'],['2','6','16']]}
-];
 let selected=new Set(),selectedRunByCell=new Map(),edited=new Map(),runOutputs=new Map(),staleCells=new Set();
 let pyodide=null,pyNamespace=null,analysisNamespace=null,runtimePromise=null,isBusy=false,capturedOut=[],capturedErr=[];
 let executionLog=[],latestBindings=new Map(),nextRunId=1,nextExecutionCount=1,currentSessionId=newSessionId();
@@ -140,11 +135,12 @@ function cellSource(c){return edited.has(c.id)?edited.get(c.id):c.code}
 function newSessionId(){return 'session-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
 function cellById(id){return cells.find(c=>c.id===id)}
 function persistCustomCells(){try{localStorage.setItem(CUSTOM_CELLS_KEY,JSON.stringify(cells.filter(c=>c.custom).map(c=>({...c,code:cellSource(c)}))))}catch{}}
-function hydrateCustomCells(){try{const saved=JSON.parse(localStorage.getItem(CUSTOM_CELLS_KEY)||'[]');if(Array.isArray(saved))saved.forEach(c=>{if(c&&c.custom&&c.id&&!cellById(c.id))cells.push({...c,deps:[],vars:[],out:'custom',custom:true})})}catch{}}
+function hydrateCustomCells(){try{const saved=JSON.parse(localStorage.getItem(CUSTOM_CELLS_KEY)||'[]');if(Array.isArray(saved))saved.forEach(c=>{if(c&&c.custom&&c.id&&!cellById(c.id))cells.push({...c,deps:[],vars:[],custom:true})})}catch{}}
 function logById(id){return executionLog.find(r=>r.runId===Number(id))}
 function latestAttempt(id){for(let i=executionLog.length-1;i>=0;i--)if(executionLog[i].cellId===id)return executionLog[i];return null}
 function latestSuccessfulRun(id){for(let i=executionLog.length-1;i>=0;i--)if(executionLog[i].cellId===id&&!executionLog[i].error)return executionLog[i];return null}
 function currentSuccessfulRun(id){const run=latestAttempt(id);return run&&!run.error?run:null}
+function cellLabel(c){const run=latestAttempt(c.id);return run?'In ['+run.executionCount+']':'In [ ]'}
 function hydrateExecutionLog(){
  try{
   const saved=JSON.parse(localStorage.getItem(LOG_STORAGE_KEY)||'[]');
@@ -156,11 +152,6 @@ function hydrateExecutionLog(){
  
 }
 function persistExecutionLog(){try{localStorage.setItem(LOG_STORAGE_KEY,JSON.stringify(executionLog))}catch{try{localStorage.setItem(LOG_STORAGE_KEY,JSON.stringify(executionLog.slice(-300)))}catch{}}}
-function output(c){if(c.out==='chart')return '<div class=\"chart\">'+[28,45,62,80,70,49,32,22,15].map(h=>'<i class=\"bar\" style=\"height:'+h+'%\"></i>').join('')+'</div><div class=\"chartaxis\"></div>';if(c.out==='table')return '<table class=\"table\"><tr><th>Company</th><th>Origin</th><th>Cocoa %</th><th>Rating</th></tr><tr><td>Maker 01</td><td>Ghana</td><td>45%</td><td>2</td></tr><tr><td>Maker 02</td><td>Peru</td><td>50%</td><td>2</td></tr></table>';if(c.out==='metrics')return '<div class=\"metricrow\"><div class=\"metric\"><strong>Sample</strong>prediction output</div><div class=\"metric\"><strong>24 rows</strong>illustrative data</div></div>';if(c.out==='matrix')return matrixHTML([['12','4','1'],['3','31','6'],['1','5','18']]);if(c.out==='console')return '<div style=\"font:10px Consolas;color:#73817d\">illustrative output · run to replace</div>';if(c.out==='custom')return '<div class=\"stale-note\">Run this cell to capture its output.</div>';return ''}
-function matrixHTML(rows){return '<table class=\"table matrix\"><tr><th></th><th>Predicted 2</th><th>Predicted 3</th><th>Predicted 4</th></tr>'+rows.map((row,i)=>'<tr><th>Actual '+(i+2)+'</th>'+row.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</table>'}
-function legacyClosure(id){const found=new Set();function visit(x){if(found.has(x))return;found.add(x);const c=cellById(x);if(c)c.deps.forEach(visit)}visit(id);return found}
-function legacySliceCells(ids,revision){const active=new Set();(ids||[]).forEach(x=>legacyClosure(x).forEach(y=>active.add(y)));return cells.filter(c=>active.has(c.id)).map(c=>({cell:c,code:codeFor(c,revision),run:null}))}
-function codeFor(c,revision){if(revision&&revision.codeById&&revision.codeById[c.id]!==undefined)return revision.codeById[c.id];if(c.id==='model'&&revision&&revision.depth!==undefined)return cellSource(c).replace(/max_depth\s*=\s*\d+/,'max_depth='+revision.depth);return cellSource(c)}
 function gatheredRuns(targetRunIds){
  const ordered=[],visited=new Set(),visiting=new Set();
  function visit(id){id=Number(id);if(visited.has(id)||visiting.has(id))return;const run=logById(id);if(!run||run.error)return;visiting.add(id);(run.parents||[]).forEach(parent=>visit(parent.runId));visiting.delete(id);visited.add(id);ordered.push(run)}
@@ -169,7 +160,6 @@ function gatheredRuns(targetRunIds){
 function selectedRunIds(ids){return (ids||Array.from(selected)).map(id=>selectedRunByCell.get(id)||((currentSuccessfulRun(id)||{}).runId)).filter(x=>x!==undefined&&x!==null)}
 function sliceCells(ids,revision){
  if(revision&&revision.runId)return gatheredRuns([revision.runId]).map(run=>({cell:cellById(run.cellId),code:run.source,run})).filter(x=>x.cell);
- if(revision&&revision.sample)return legacySliceCells(ids||['conf'],revision);
  return gatheredRuns(selectedRunIds(ids)).map(run=>({cell:cellById(run.cellId),code:run.source,run})).filter(x=>x.cell)
 }
 function activeIds(ids){return new Set(sliceCells(ids||Array.from(selected)).map(x=>x.cell.id))}
@@ -178,12 +168,10 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 function hasAncestorCell(runId,targetCell,seen){const mark=seen||new Set();if(mark.has(Number(runId)))return false;mark.add(Number(runId));const run=logById(runId);if(!run)return false;if(run.cellId===targetCell)return true;return (run.parents||[]).some(p=>hasAncestorCell(p.runId,targetCell,mark))}
 function markStaleFrom(id){cells.forEach(c=>{const run=latestSuccessfulRun(c.id);if(c.id===id||(run&&hasAncestorCell(run.runId,id)))staleCells.add(c.id)});document.querySelectorAll('.cell').forEach(el=>{const stale=staleCells.has(el.dataset.id);el.classList.toggle('stale',stale);const state=el.querySelector('.cell-state');if(state)state.textContent=stale?'OUTPUT STALE':''})}
 function outputHtml(c){
- const r=runOutputs.get(c.id),stale=staleCells.has(c.id);
- const title=r?(r.error?'Python error · run #'+r.runId:(stale?'Stale output · run #'+r.runId:'Run #'+r.runId+' · browser Python')):stale?'Stale output · rerun to refresh':'Illustrative saved output · run to replace';
- let body;if(r)body='<pre class=\"python-output '+(r.error?'error':'')+'\">'+esc(r.text||'(Ran successfully; no displayed value)')+'</pre>';else if(c.out)body=output(c);else body='<div class=\"stale-note\">Code changed. Run this cell or choose Run all to refresh its result.</div>';
- if(stale&&!r&&c.out)body='<div class=\"stale-note\">Code changed. This saved sample may no longer match.</div>'+body;
- if(c.out)return '<div class=\"out result '+(selected.has(c.id)?'active':'')+'\" data-select=\"'+c.id+'\" role=\"button\" tabindex=\"0\" aria-pressed=\"'+selected.has(c.id)+'\" aria-label=\"Select '+esc(c.note)+' result\"><div class=\"outlabel\">'+title+' <span style=\"float:right;color:#9aa5a2\">'+(selected.has(c.id)?'✓ selected':'↗ select result')+'</span></div>'+body+'</div>';
- if(r||stale)return '<div class=\"cell-run-output\"><div class=\"outlabel\">'+title+'</div>'+body+'</div>';return ''
+  const r=runOutputs.get(c.id),stale=staleCells.has(c.id);
+  const title=r?(r.error?'Python error · run #'+r.runId:(stale?'Stale output · run #'+r.runId:'Run #'+r.runId+' · browser Python')):stale?'Stale output · rerun to refresh':'Not run yet · waiting for Python';
+  const body=r?'<pre class="python-output '+(r.error?'error':'')+'">'+esc(r.text||'(Ran successfully; no displayed value)')+'</pre>':'<div class="stale-note">'+(stale?'Code changed. Run this cell to refresh its result.':'Python output will appear here after the cell runs.')+'</div>';
+  return '<div class="out result '+(selected.has(c.id)?'active':'')+'" data-select="'+c.id+'" role="button" tabindex="0" aria-pressed="'+selected.has(c.id)+'" aria-label="Select '+esc(c.note)+' result"><div class="outlabel">'+title+' <span style="float:right;color:#9aa5a2">'+(selected.has(c.id)?'✓ selected':'↗ select result')+'</span></div>'+body+'</div>'
 }
 function resizeEditors(){document.querySelectorAll('.editor').forEach(el=>{el.style.height='auto';el.style.height=Math.max(48,el.scrollHeight)+'px'})}
 function setBusy(value){isBusy=value;document.getElementById('runAllBtn').disabled=value;document.querySelectorAll('.run-cell,.editor').forEach(el=>el.disabled=value)}
@@ -204,7 +192,7 @@ function render(){
  const active=activeIds();
  document.getElementById('cells').innerHTML=cells.map(c=>{
   const sel=selected.has(c.id),source=cellSource(c),st=staleCells.has(c.id);
-  return '<article class=\"cell '+(active.has(c.id)?'dep ':'')+(sel?'selected ':'')+(selected.size&&!active.has(c.id)?'dim ':'')+(st?'stale':'')+'\" data-id=\"'+c.id+'\"><div class=\"celltop\"><span class=\"run\">'+c.n+'</span><span>'+esc(c.note)+'</span><span class=\"cell-state\">'+(st?'OUTPUT STALE':'')+'</span><button class=select-cell data-select-cell='+c.id+'>'+(sel?'✓ Selected':'Select result')+'</button>'+(active.has(c.id)?'<span class=\"tag\">IN RECORDED SLICE</span>':'')+'<button class=\"run-cell\" data-run=\"'+c.id+'\" '+(isBusy?'disabled':'')+'>▶ Run</button></div><textarea class=\"editor\" data-editor=\"'+c.id+'\" aria-label=\"Python code for '+esc(c.note)+'\" spellcheck=\"false\" '+(isBusy?'disabled':'')+'>'+esc(source)+'</textarea>'+outputHtml(c)+'</article>'
+  return '<article class=\"cell '+(active.has(c.id)?'dep ':'')+(sel?'selected ':'')+(selected.size&&!active.has(c.id)?'dim ':'')+(st?'stale':'')+'\" data-id=\"'+c.id+'\"><div class=\"celltop\"><span class=\"run\">'+cellLabel(c)+'</span><span>'+esc(c.note)+'</span><span class=\"cell-state\">'+(st?'OUTPUT STALE':'')+'</span><button class=select-cell data-select-cell='+c.id+'>'+(sel?'✓ Selected':'Select result')+'</button>'+(active.has(c.id)?'<span class=\"tag\">IN RECORDED SLICE</span>':'')+'<button class=\"run-cell\" data-run=\"'+c.id+'\" '+(isBusy?'disabled':'')+'>▶ Run</button></div><textarea class=\"editor\" data-editor=\"'+c.id+'\" aria-label=\"Python code for '+esc(c.note)+'\" spellcheck=\"false\" '+(isBusy?'disabled':'')+'>'+esc(source)+'</textarea>'+outputHtml(c)+'</article>'
  }).join('');
  document.querySelectorAll('.editor').forEach(el=>{el.addEventListener('input',()=>{edited.set(el.dataset.editor,el.value);const c=cellById(el.dataset.editor);if(c&&c.custom){c.code=el.value;persistCustomCells()}markStaleFrom(el.dataset.editor);resizeEditors()});el.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();const b=el.closest('.cell').querySelector('[data-run]');if(b)b.click()}})});
  document.querySelectorAll('.run-cell').forEach(el=>el.addEventListener('click',()=>runCell(el.dataset.run)));document.querySelectorAll('.select-cell').forEach(el=>el.addEventListener('click',()=>toggle(el.dataset.selectCell)));
@@ -275,7 +263,7 @@ function analyzeCode(source){
  try{return JSON.parse(value&&typeof value.toJs==='function'?value.toJs():String(value))}finally{if(value&&typeof value.destroy==='function')value.destroy()}
 }
 async function executeCell(c,code){
- await ensureRuntime();setRuntimeStatus('Loading imports for '+c.n+'…','loading');capturedOut=[];capturedErr=[];await pyodide.loadPackagesFromImports(code);
+ await ensureRuntime();setRuntimeStatus('Loading imports for '+c.note+'…','loading');capturedOut=[];capturedErr=[];await pyodide.loadPackagesFromImports(code);
  const result=await pyodide.runPythonAsync(code,{globals:pyNamespace}),repr=pythonRepr(result),stdout=capturedOut.join(''),stderr=capturedErr.join('');
  return {stdout,stderr,result:repr,text:stdout+stderr+(repr?((stdout||stderr)?'\n':'')+repr:'')}
 }
@@ -287,34 +275,36 @@ async function executeAndRecord(c){
   analysis.reads.forEach(variable=>{const producer=latestBindings.get(variable);if(producer)parentMap.set(variable+'|'+producer.runId,{variable,runId:producer.runId})});
   parents=Array.from(parentMap.values());result=await executeCell(c,code);success=true
  }catch(error){details=errorRecord(error);const stdout=capturedOut.join(''),stderr=capturedErr.join('');result={stdout,stderr,result:'',text:stdout+stderr+(stdout||stderr?'\n':'')+details.evalue}}
- const run={runId:nextRunId++,executionCount:nextExecutionCount++,sessionId:currentSessionId,cellId:c.id,cellName:c.n,note:c.note,time:new Date().toISOString(),source:code,reads:analysis.reads,writes:analysis.writes,parents,text:result.text||'',stdout:result.stdout||'',stderr:result.stderr||'',result:result.result||'',error:!success,errorInfo:details};
+ const run={runId:nextRunId++,executionCount:nextExecutionCount++,sessionId:currentSessionId,cellId:c.id,cellName:c.note,note:c.note,time:new Date().toISOString(),source:code,reads:analysis.reads,writes:analysis.writes,parents,text:result.text||'',stdout:result.stdout||'',stderr:result.stderr||'',result:result.result||'',error:!success,errorInfo:details};
  executionLog.push(run);
- if(success){analysis.writes.forEach(variable=>latestBindings.set(variable,run));staleCells.delete(c.id);if(selected.has(c.id))selectedRunByCell.set(c.id,run.runId);setRuntimeStatus('Python ready · ran '+c.n+' as run #'+run.runId,'ready');}
- else{if(selected.has(c.id))selectedRunByCell.delete(c.id);setRuntimeStatus('Python error in '+c.n+' · run #'+run.runId,'error')}
+ if(success){analysis.writes.forEach(variable=>latestBindings.set(variable,run));staleCells.delete(c.id);if(selected.has(c.id))selectedRunByCell.set(c.id,run.runId);setRuntimeStatus('Python ready · ran '+c.note+' as run #'+run.runId,'ready');}
+ else{if(selected.has(c.id))selectedRunByCell.delete(c.id);setRuntimeStatus('Python error in '+c.note+' · run #'+run.runId,'error')}
  runOutputs.set(c.id,{text:run.text,error:run.error,runId:run.runId,stdout:run.stdout,stderr:run.stderr,result:run.result,errorInfo:run.errorInfo});persistExecutionLog();return run
 }
-function revisionFromRun(run){return {runId:run.runId,cellId:run.cellId,time:new Date(run.time).toLocaleString(),sample:false,text:run.text}}
-function addCell(){const id='custom-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6),c={id,n:'In [ ]',code:'# New Python cell\n',deps:[],vars:[],out:'custom',note:'New Python cell',custom:true};cells.push(c);persistCustomCells();render();const editor=Array.from(document.querySelectorAll('.editor')).find(el=>el.dataset.editor===id);if(editor){editor.focus();editor.select()}showToast('New Python cell added. Edit it, then select its result to gather.')}
+function revisionFromRun(run){return {runId:run.runId,cellId:run.cellId,time:new Date(run.time).toLocaleString(),text:run.text}}
+function addCell(){const id='custom-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6),c={id,n:'In [ ]',code:'# New Python cell\n',deps:[],vars:[],note:'New Python cell',custom:true};cells.push(c);persistCustomCells();render();const editor=Array.from(document.querySelectorAll('.editor')).find(el=>el.dataset.editor===id);if(editor){editor.focus();editor.select()}showToast('New Python cell added. Edit it, then select its result to gather.')}
 async function runCell(id){if(isBusy)return;const c=cellById(id);if(!c)return;setBusy(true);render();try{await executeAndRecord(c)}finally{setBusy(false);render()}}
-async function runAll(){
- if(isBusy)return;setBusy(true);
+async function runAll(sampleOnly=false){
+ if(isBusy)return;
+ const cellsToRun=sampleOnly?cells.filter(c=>!c.custom):cells;
+ if(!cellsToRun.length)return;
+ setBusy(true);
  try{
   await ensureRuntime();if(pyNamespace&&typeof pyNamespace.destroy==='function')pyNamespace.destroy();pyNamespace=pyodide.runPython('dict()');latestBindings.clear();currentSessionId=newSessionId();nextExecutionCount=1;cells.forEach(c=>staleCells.add(c.id));render();
-  for(let i=0;i<cells.length;i++){const c=cells[i];setRuntimeStatus('Running '+(i+1)+' of '+cells.length+' · '+c.n,'loading');const run=await executeAndRecord(c);render();if(run.error){setRuntimeStatus('Stopped at '+c.n+' · run #'+run.runId+' failed','error');return}}
-  setRuntimeStatus('Python ready · all '+cells.length+' cells ran','ready')
+  for(let i=0;i<cellsToRun.length;i++){const c=cellsToRun[i];setRuntimeStatus('Running '+(i+1)+' of '+cellsToRun.length+' · '+c.note,'loading');const run=await executeAndRecord(c);render();if(run.error){setRuntimeStatus('Stopped at '+c.note+' · run #'+run.runId+' failed','error');return}}
+  setRuntimeStatus(sampleOnly?'Python ready · sample notebook ran':'Python ready · all '+cellsToRun.length+' cells ran','ready')
  }catch(e){setRuntimeStatus('Python could not start · '+(e&&e.message?e.message:'check internet'),'error')}
  finally{setBusy(false);render()}
 }
 function revisionMarkup(v,i){
- const targetId=v.cellId||'conf',target=cellById(targetId),rows=sliceCells([targetId],v),code=rows.map(x=>'<div class=\"revcell\"><span>'+(x.run?'Run #'+x.run.runId+' · '+esc(x.cell.note):esc(x.cell.note))+'</span><pre>'+esc(x.code)+'</pre></div>').join('');
- const latest=latestSuccessfulRun(targetId),title=v.sample?'Illustrative version':(latest&&latest.runId===v.runId?'Latest browser run':'Earlier browser run');
- const result=v.sample?matrixHTML(v.cm):'<pre class=\"python-output\">'+esc(v.text||'(No displayed value)')+'</pre>',label=v.sample?'Illustrative confusion matrix · sample output':'Captured output · '+(target?target.note:targetId);
- const details=v.sample?'<div class=\"revparam\">Model setting <strong>max_depth = '+esc(v.depth)+'</strong></div>':'<div class=\"revparam\">Cell <strong>'+esc(target?target.note:targetId)+'</strong> · run #'+v.runId+'</div>';
- return '<article class=\"rev '+(i===0?'current':'')+'\"><div class=\"revtop\"><span>'+title+'</span><small>'+esc(v.time)+'</small></div><div class=\"revresult\"><div class=\"outlabel\">'+label+'</div>'+result+'</div>'+details+'<div class=\"rev-change\"><span>'+(v.sample?'Captured model source':'Recorded code lineage')+'</span><code>'+esc(rows.length?rows[rows.length-1].code.split('\n')[0]:'No code captured')+'</code><small>'+(v.sample?'Preset example':'Exact code snapshots from the selected run and its dependencies')+'</small></div><div class=\"revcode\">'+code+'</div><div class=\"revactions\"><button data-copy=\"'+i+'\">Copy code</button><button data-open=\"'+i+'\">Open this version</button></div></article>'
+  const targetId=v.cellId,target=cellById(targetId),rows=sliceCells([targetId],v),code=rows.map(x=>'<div class="revcell"><span>Run #'+x.run.runId+' · '+esc(x.cell.note)+'</span><pre>'+esc(x.code)+'</pre></div>').join('');
+  const latest=latestSuccessfulRun(targetId),title=latest&&latest.runId===v.runId?'Latest browser run':'Earlier browser run';
+  const result='<pre class="python-output">'+esc(v.text||'(No displayed value)')+'</pre>',label='Captured output · '+(target?target.note:targetId);
+  const details='<div class="revparam">Cell <strong>'+esc(target?target.note:targetId)+'</strong> · run #'+v.runId+'</div>';
+  return '<article class="rev '+(i===0?'current':'')+'"><div class="revtop"><span>'+title+'</span><small>'+esc(v.time)+'</small></div><div class="revresult"><div class="outlabel">'+label+'</div>'+result+'</div>'+details+'<div class="rev-change"><span>Recorded code lineage</span><code>'+esc(rows.length?rows[rows.length-1].code.split('\n')[0]:'No code captured')+'</code><small>Exact code snapshots from the selected run and its dependencies</small></div><div class="revcode">'+code+'</div><div class="revactions"><button data-copy="'+i+'">Copy code</button><button data-open="'+i+'">Open this version</button></div></article>'
 }
 function openRevisions(){
  const ids=Array.from(selected),actual=ids.flatMap(id=>executionLog.filter(r=>r.cellId===id&&!r.error).slice(-5).reverse()),rows=actual.map(revisionFromRun);
- if(ids.includes('conf'))rows.push(...sampleRevisions);
  if(!rows.length){showToast('Run a selected cell first to create a revision.');return}
  document.getElementById('revbody').innerHTML=rows.map(revisionMarkup).join('');document.getElementById('modal').classList.add('open');
  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const v=rows[Number(b.dataset.copy)],code=sliceCells([v.cellId||'conf'],v).map(x=>x.code).join('\n\n');try{await navigator.clipboard.writeText(code);showToast('Selected revision code copied.')}catch{showToast('Clipboard is blocked. Open this version to download it as .ipynb.')}});
@@ -325,7 +315,7 @@ function bindModal(){
  document.getElementById('notebookModal').onclick=e=>{if(e.target.id==='notebookModal')e.currentTarget.classList.remove('open')};document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('modal').classList.remove('open');document.getElementById('notebookModal').classList.remove('open')}})
 }
-document.getElementById('runAllBtn').onclick=runAll;document.getElementById('addCellBtn').onclick=addCell;document.getElementById('gatherBtn').onclick=()=>openNotebook(null);document.getElementById('clearBtn').onclick=()=>{selected.clear();selectedRunByCell.clear();render()};
+document.getElementById('runAllBtn').onclick=()=>runAll();document.getElementById('addCellBtn').onclick=addCell;document.getElementById('gatherBtn').onclick=()=>openNotebook(null);document.getElementById('clearBtn').onclick=()=>{selected.clear();selectedRunByCell.clear();render()};
 document.getElementById('copyBtn').onclick=async()=>{if(!selected.size)return;const code=selectedCode();if(!code){showToast('No successful run was recorded for this selection. Run it first, then gather.');return}try{await navigator.clipboard.writeText(code);showToast('Recorded code snapshots copied to clipboard.')}catch{showToast('Clipboard is blocked. Use Preview gathered notebook to download an .ipynb.')}};
-bindModal();hydrateCustomCells();hydrateExecutionLog();render();if(location.protocol==='file:')setRuntimeStatus('Open start-gather-demo.cmd to run Python','error');
+bindModal();hydrateCustomCells();hydrateExecutionLog();render();if(location.protocol==='file:')setRuntimeStatus('Open start-gather-demo.cmd to run Python','error');else setTimeout(()=>runAll(true),0);
 </script></body></html>
