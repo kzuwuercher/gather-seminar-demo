@@ -42,7 +42,7 @@ const sampleRevisions=[
  {time:'Preset example · 4 minutes earlier',depth:6,sample:true,cm:[['13','3','1'],['2','34','4'],['1','4','19']]},
  {time:'Preset example · 17 minutes earlier',depth:3,sample:true,cm:[['11','5','1'],['4','29','7'],['2','6','16']]}
 ];
-let selected=new Set(),selectedRunByCell=new Map(),edited=new Map(),runOutputs=new Map(),staleCells=new Set(),;
+let selected=new Set(),selectedRunByCell=new Map(),edited=new Map(),runOutputs=new Map(),staleCells=new Set();
 let pyodide=null,pyNamespace=null,analysisNamespace=null,runtimePromise=null,isBusy=false,capturedOut=[],capturedErr=[];
 let executionLog=[],latestBindings=new Map(),nextRunId=1,nextExecutionCount=1,currentSessionId=newSessionId();
 const LOG_STORAGE_KEY='gather.executionLog.v1';
