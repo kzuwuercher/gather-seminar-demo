@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gather — Notebook code gathering</title>
+<style>
+:root{--ink:#17252b;--muted:#66777c;--line:#dce5e3;--paper:#f6f8f6;--white:#fff;--teal:#147f78;--mint:#e1f4ee;--blue:#eef1ff;--amber:#fff2d8;--shadow:0 12px 34px #22363212}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit;cursor:pointer;border:0}.top{height:62px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 25px;gap:13px}.mark{width:30px;height:30px;border-radius:9px;background:#dff3ed;color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:19px}.brand{font-weight:750;font-size:16px;letter-spacing:-.3px}.crumb{color:#91a09f;margin-left:3px}.file{font-size:13px;color:#516269;border-left:1px solid var(--line);padding-left:16px;margin-left:6px}.topright{margin-left:auto;display:flex;gap:9px;align-items:center;color:var(--muted);font-size:12px}.badge{border:1px solid var(--line);padding:6px 10px;border-radius:20px;background:white}.layout{max-width:1440px;margin:0 auto;padding:23px 28px 34px;display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:19px}.head{grid-column:1/-1;display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1px}.eyebrow{text-transform:uppercase;letter-spacing:1.3px;font-size:10px;color:var(--teal);font-weight:800}.head h1{font-size:25px;letter-spacing:-.8px;margin:5px 0 0}.head p{color:var(--muted);margin:4px 0 0;font-size:13px}.headright{display:flex;gap:8px;align-items:center;padding-bottom:4px}.pill{font-size:11px;color:#58706e;background:#edf3f0;padding:6px 9px;border-radius:20px}.card{background:white;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}.notebook{overflow:hidden}.nbbar{height:45px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 17px;gap:9px}.dot{width:8px;height:8px;border-radius:50%;background:#c8d8d3}.nbtitle{font-size:12px;font-weight:700}.nbmeta{font-size:11px;color:#8a9999;margin-left:auto}.nbbody{padding:13px 16px 18px}.cell{position:relative;border:1px solid #e6ecea;border-radius:9px;margin:0 0 9px;background:#fff;transition:.18s}.cell.dep{background:#fbfffd;border-color:#72bdb0;box-shadow:0 0 0 2px #dff3ed}.cell.selected{border-color:var(--teal);box-shadow:0 0 0 2px #b9e4da}.cell.dim{opacity:.48}.celltop{height:29px;display:flex;align-items:center;padding:0 11px;gap:8px;color:#81908f;font-size:10px}.run{color:var(--teal);font-weight:700}.tag{margin-left:auto;color:#147f78;background:#e7f5f0;border-radius:4px;padding:2px 6px;font-size:9px;font-weight:750;letter-spacing:.4px}.code{white-space:pre-wrap;padding:2px 14px 12px;margin:0;font:12px/1.55 "SFMono-Regular",Consolas,monospace;color:#28383d}.kw{color:#9661ae}.fn{color:#177c76}.str{color:#b56b34}.num{color:#5473bf}.out{border-top:1px solid #edf0ef;padding:10px 13px 12px;background:#fbfcfb;border-radius:0 0 8px 8px}.outlabel{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:#889694;font-weight:750;margin-bottom:6px}.result{cursor:pointer}.result:hover{background:#f0faf6}.result.active{background:#f1f2ff;outline:1px solid #bfc7fa}.chart{height:48px;display:flex;align-items:flex-end;gap:7px;padding:0 2px}.bar{width:12%;background:#b9ded2;border-radius:3px 3px 0 0;position:relative}.bar:nth-child(3n){background:#7db6a5}.bar:nth-child(2n){background:#d7e9e2}.chartaxis{border-top:1px solid #ccd7d3;margin-top:2px}.table{font-size:10px;border-collapse:collapse;width:100%;color:#52615f}.table td,.table th{text-align:left;border-bottom:1px solid #e9efed;padding:4px 6px}.table th{color:#7c8987;font-weight:600}.metricrow{display:flex;gap:7px}.metric{border:1px solid #e4eae8;border-radius:6px;padding:6px 9px;font-size:10px;color:#63716f}.metric strong{display:block;color:#26383a;font-size:14px}.side{display:flex;flex-direction:column;gap:13px}.panel{padding:15px}.panelhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.panelhead h2{font-size:13px;margin:0;letter-spacing:-.1px}.count{font-size:10px;background:#f1f4f2;color:#667570;padding:3px 7px;border-radius:12px}.hint{color:#788582;font-size:11px;line-height:1.45;margin:0 0 12px}.target{border:1px solid #e5ebe8;border-radius:7px;padding:9px 10px;margin:6px 0;display:flex;align-items:center;gap:8px;font-size:11px;cursor:pointer}.target:hover{border-color:#91c7ba}.checkbox{width:15px;height:15px;border:1px solid #c9d5d1;border-radius:4px;display:grid;place-items:center;font-size:10px;color:white}.target.checked .checkbox{background:var(--teal);border-color:var(--teal)}.target small{margin-left:auto;color:#899694}.actions{display:grid;gap:7px;margin-top:12px}.btn{border-radius:7px;padding:9px 12px;font-size:11px;font-weight:700}.primary{background:var(--teal);color:white}.primary:hover{background:#096c65}.secondary{background:white;color:#3c5552;border:1px solid var(--line)}.secondary:hover{background:#f5faf8}.actionrow{display:flex;gap:7px}.actionrow .btn{flex:1}.legend{font-size:10px;color:#81908c;display:flex;align-items:center;gap:6px}.swatch{width:9px;height:9px;border-radius:3px;background:#b7e1d3}.slice-preview{display:none;margin-top:10px;border:1px solid #dbe8e3;background:#fbfefc;border-radius:7px;max-height:210px;overflow:auto;padding:8px}.slice-preview.show{display:block}.sliceitem{font:10px/1.5 Consolas,monospace;padding:4px 6px;border-radius:4px;color:#3e5955}.sliceitem+.sliceitem{border-top:1px solid #edf2ef}.sliceitem .idx{display:inline-block;color:#86a49a;width:24px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#203732;color:white;padding:10px 16px;border-radius:8px;box-shadow:var(--shadow);transition:.2s;z-index:10;font-size:12px}.toast.show{opacity:1;transform:translate(-50%,0)}.foot{font-size:10px;color:#97a3a0;text-align:center;margin-top:4px}.modalback{position:fixed;inset:0;background:#16242166;display:none;align-items:center;justify-content:center;padding:25px;z-index:5}.modalback.open{display:flex}.modal{background:#fff;width:min(960px,96vw);height:min(680px,90vh);border-radius:14px;box-shadow:0 24px 80px #102a2455;display:flex;flex-direction:column;overflow:hidden}.modalhead{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center}.modalhead h2{font-size:16px;margin:0}.modalhead p{font-size:11px;color:var(--muted);margin:2px 0 0}.close{margin-left:auto;background:#f1f4f2;width:30px;height:30px;border-radius:50%;font-size:17px;color:#53625e}.revbody{padding:17px 20px;overflow:auto;display:flex;gap:12px;flex:1}.rev{min-width:270px;max-width:270px;border:1px solid var(--line);border-radius:9px;overflow:hidden;align-self:flex-start}.rev.current{border-color:#5da997;box-shadow:0 0 0 2px #e0f2ed}.revtop{padding:10px 12px;background:#f7faf8;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;font-size:11px;font-weight:700}.revtop small{font-weight:500;color:#83908d}.revresult{padding:13px;height:103px;background:#fcfdfc}.revcode{padding:10px 12px;font:10px/1.55 Consolas,monospace;white-space:pre-wrap;min-height:180px}.diff{background:#fff0cb;font-weight:700;border-radius:2px}.revactions{padding:0 12px 12px;display:flex;gap:6px}.revactions button{font-size:10px;padding:7px 9px;border-radius:6px;background:#edf4f1;color:#385851;font-weight:650}.gathered{background:#e7f5ef;border:1px solid #b9ddd0;border-radius:8px;padding:12px;margin-top:10px}.gatheredhead{font-size:11px;font-weight:750;color:#246d5f;margin-bottom:6px}.gathered pre{margin:0;white-space:pre-wrap;font:10px/1.55 Consolas,monospace;color:#35544d}.tip{background:#fff9e9;border:1px solid #f0e4c5;color:#7a683a;border-radius:8px;padding:10px;font-size:10px;margin-top:12px;line-height:1.45}@media(max-width:900px){.layout{grid-template-columns:1fr;padding:15px}.head{grid-column:1}.side{display:grid;grid-template-columns:1fr 1fr}.headright{display:none}}@media(max-width:590px){.side{display:flex}.top{padding:0 14px}.file,.topright .badge{display:none}.layout{padding:12px}.head h1{font-size:21px}}
+.textbtn{background:transparent;color:#71817d;font-size:10px;padding:4px 6px;border-radius:5px}.textbtn:hover:not(:disabled){background:#eff5f2;color:#285b50}.textbtn:disabled,.btn:disabled{opacity:.45;cursor:not-allowed}.slice-summary{padding:3px 2px 7px;color:#45615a;font-size:10px}.slice-summary strong{display:block;font-size:11px;color:#2c5048}.slice-summary span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.result:focus-visible,.target:focus-visible,button:focus-visible{outline:2px solid #278b7d;outline-offset:2px}.notebook-modal{width:min(1000px,96vw)}.nbpreview-scroll{padding:15px 20px;overflow:auto;flex:1;background:#f7f9f7}.preview-meta{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:0 0 12px}.preview-meta>div>strong{font-size:12px}.result-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.result-chip{background:#e8f5f0;color:#28695b;border-radius:20px;padding:4px 8px;font-size:10px}.export-note{background:#fff8e8;border:1px solid #eee0bd;color:#78673f;border-radius:7px;padding:9px 11px;margin:0 0 12px;font-size:10px;line-height:1.45}.preview-cell{background:#fff;border:1px solid #e1e9e5;border-radius:8px;margin:0 0 9px;overflow:hidden}.preview-cell-head{height:30px;background:#fafcfb;border-bottom:1px solid #edf1ef;display:flex;align-items:center;gap:10px;padding:0 11px;color:#82918c;font-size:10px}.preview-order{margin-left:auto;color:#378477;font-size:9px;text-transform:uppercase;letter-spacing:.5px}.preview-code{margin:0;padding:10px 13px 13px;white-space:pre-wrap;font:11px/1.55 Consolas,monospace;color:#263a3a}.preview-output{border-top:1px solid #edf1ef;background:#fbfcfb;padding:9px 12px 11px}.preview-output .chart{max-width:380px}.modalfoot{padding:11px 18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:8px;background:#fff}.modalfoot .spacer{flex:1}.modalfoot .footnote{color:#899693;font-size:10px;margin-right:auto}.revcode{min-height:0;max-height:240px;overflow:auto}.revcell{padding:6px 0;border-bottom:1px solid #edf1ef}.revcell:last-child{border:0}.revcell>span{display:block;color:#8a9994;font:9px/1.4 ui-sans-serif,system-ui;margin-bottom:3px}.revcell pre{margin:0;white-space:pre-wrap;font:10px/1.5 Consolas,monospace}.revparam{padding:7px 12px;background:#f8faf8;border-bottom:1px solid #edf1ef;color:#74827e;font-size:10px}.revparam strong{color:#285f54;margin-left:4px}.revresult{height:auto;min-height:120px;padding:11px 12px}.revresult .table td,.revresult .table th{padding:3px 4px;font-size:9px}@media(max-width:590px){.modalfoot{flex-wrap:wrap}.modalfoot .footnote{width:100%;order:3}.preview-meta{align-items:center}}.rev-change{padding:8px 12px;background:#f5faf7;border-bottom:1px solid #edf1ef}.rev-change>span{display:block;color:#82918c;font-size:9px;text-transform:uppercase;letter-spacing:.5px}.rev-change code{display:block;color:#38524b;font:10px/1.5 Consolas,monospace;margin-top:3px}.rev-change code strong{background:#fff0cb;border-radius:2px;padding:1px 3px}.rev-change small{display:block;color:#8b9692;font-size:9px;margin-top:3px}.nbbar{gap:9px}.nbmeta{margin-left:auto}.runtime-status{font-size:10px;color:#84938e;background:#f1f5f3;border-radius:14px;padding:5px 9px;white-space:nowrap}.runtime-status.loading{color:#8c691c;background:#fff5d9}.runtime-status.ready{color:#1c776b;background:#e5f5ef}.runtime-status.error{color:#a83a32;background:#fff0ed}.run-all,.run-cell{border:1px solid #b8d9d0;background:#eaf7f2;color:#176d62;border-radius:6px;font-weight:700}.run-all{font-size:10px;padding:6px 9px;white-space:nowrap}.run-cell{font-size:9px;padding:4px 7px;margin-left:4px;white-space:nowrap}.run-all:hover:not(:disabled),.run-cell:hover:not(:disabled){background:#d8f0e8}.run-all:disabled,.run-cell:disabled{opacity:.55;cursor:wait}.editor{display:block;width:100%;min-height:48px;resize:vertical;overflow:hidden;border:0;border-radius:0 0 8px 8px;background:transparent;outline:none;padding:2px 14px 12px;margin:0;color:#28383d;font:12px/1.55 "SFMono-Regular",Consolas,monospace;tab-size:4}.editor:focus{background:#fbfefc;box-shadow:inset 3px 0 #6ab3a3}.editor:disabled{opacity:.8}.cell-state{margin-left:auto;color:#aa7920;font-size:9px;font-weight:700;letter-spacing:.3px}.cell.stale{border-color:#e4c67d}.cell.stale .cell-state{display:inline}.python-output{margin:0;white-space:pre-wrap;overflow:auto;max-height:250px;font:11px/1.55 Consolas,monospace;color:#344b46}.python-output.error{color:#9e342c;background:#fff3f1;border-left:3px solid #d77b70;padding:7px 9px}.cell-run-output{border-top:1px solid #edf0ef;padding:10px 13px 12px;background:#fbfcfb}.stale-note{font-size:10px;color:#876a2a;padding:3px 0 7px}.run-cell:focus-visible,.run-all:focus-visible,.editor:focus-visible{outline:2px solid #278b7d;outline-offset:2px}.nbbar .nbtitle{white-space:nowrap}@media(max-width:900px){.nbbar{height:auto;min-height:45px;flex-wrap:wrap;padding:8px 12px}.nbmeta{width:100%;text-align:right}.runtime-status{margin-left:auto}}@media(max-width:590px){.nbbar .nbtitle{flex:1}.runtime-status{order:3;margin-left:0}.nbmeta{order:4}.run-all{order:2}.celltop{height:auto;min-height:29px;flex-wrap:wrap;padding-top:4px;padding-bottom:4px}.cell-state{margin-left:auto}.editor{font-size:11px}.modalfoot{flex-wrap:wrap}.modalfoot .footnote{width:100%;order:3}}.execution-log-panel{grid-column:1;min-width:0}.execution-log{max-height:470px;overflow:auto;display:grid;gap:7px}.log-empty{padding:14px;border:1px dashed #ccd9d4;border-radius:7px;color:#84928e;font-size:11px;text-align:center}.log-run{border:1px solid #e3ebe7;border-radius:8px;padding:9px 10px;background:#fff}.log-run.failed{border-color:#efd0ca;background:#fffafa}.log-run.picked{border-color:#62ad9d;box-shadow:0 0 0 2px #e1f3ed}.log-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.log-top strong{font-size:10px;color:#355a52}.log-top time{font-size:9px;color:#91a09b}.log-cell{font-size:10px;font-weight:700;color:#273c39}.log-state{font-size:8px;text-transform:uppercase;letter-spacing:.5px;border-radius:9px;padding:2px 6px;background:#e6f5ef;color:#28796a}.log-state.failed{background:#fff0ed;color:#a83a32}.log-select{margin-left:auto;border:1px solid #c6ded5;border-radius:5px;padding:4px 7px;background:#f1faf6;color:#28695b;font-size:9px;font-weight:700}.log-vars{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.log-vars span{font-size:9px;border-radius:4px;padding:2px 5px;background:#f1f5f3;color:#5a6c66}.log-vars .producer{background:#eef1ff;color:#58639b}.log-detail{margin-top:6px;color:#63736e;font-size:9px}.log-detail summary{cursor:pointer}.log-detail pre{max-height:170px;overflow:auto;white-space:pre-wrap;margin:5px 0 0;padding:7px;background:#f7faf8;border-radius:5px;font:9px/1.5 Consolas,monospace;color:#40534d}.log-detail pre.error{color:#a83a32;background:#fff3f1}@media(max-width:900px){.execution-log-panel{grid-column:1}}</style></head>
+<body>
+<header class="top"><div class="mark">g</div><div class="brand">gather</div><span class="crumb">/</span><div class="file">chocolate-analysis.ipynb</div><div class="topright"><span class="badge">DEMO · editable Python</span><span>⋮</span></div></header>
+<main class="layout">
+<section class="head"><div><div class="eyebrow">Code gathering tools · editable notebook · browser Python</div><h1>Make sense of the notebook mess.</h1><p>Edit cells and run Python in the browser, or select a result to gather its code slice.</p></div><div class="headright"><span class="pill">47 cells in paper scenario</span><span class="pill">Illustrative revision history</span></div></section>
+<section class="card notebook"><div class="nbbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="nbtitle">Chocolate quality analysis</span><button class="run-all" id="runAllBtn" type="button">▶ Run all cells</button><span class="runtime-status" id="runtimeStatus">Python not started · local runtime</span><span class="nbmeta">paper scenario · sample data</span></div><div class="nbbody" id="cells"></div></section>
+<aside class="side">
+<section class="card panel"><div class="panelhead"><h2>Gather selected results</h2><span class="count" id="selectedCount">0 selected</span><button class="textbtn" id="clearBtn" type="button" disabled>Clear</button></div><p class="hint">Choose outputs or variables. The notebook follows the actual runs and variable versions that produced them.</p><div id="targets"></div><div class="legend"><i class="swatch"></i> Included in current slice</div><div class="actions"><button class="btn primary" id="gatherBtn">Preview gathered notebook →</button><div class="actionrow"><button class="btn secondary" id="copyBtn">Gather to Clipboard</button><button class="btn secondary" id="revisionsBtn">Gather to Revisions</button></div></div><div class="slice-preview" id="preview"></div><div class="tip">Run history is saved in this browser. Gather follows recorded variable versions; preset revision cards remain illustrative.</div></section>
+<section class="card panel"><div class="panelhead"><h2>About this demo</h2><span class="count">revibe</span></div><p class="hint">Python, pandas, and scikit-learn run in this browser. On first run, the Python runtime loads from the Pyodide CDN (about 40 MB); execution history stays in this browser.</p><div class="metricrow"><div class="metric"><strong>Editable</strong>Python cells</div><div class="metric"><strong>Browser</strong>runtime</div><div class="metric"><strong>Live</strong>run history</div></div></section>
+<div class="foot">Demo implementation · slicing uses the paper’s chocolate analysis scenario</div>
+</aside>
+<section class="card panel execution-log-panel"><div class="panelhead"><h2>Execution log</h2><span class="count" id="logCount">0 runs</span></div><p class="hint">Recorded runs preserve the exact code, output, variables, and earlier run versions used by each result. Click “Gather slice” on a successful run to inspect its history.</p><div class="execution-log" id="executionLog"></div></section>
+</main>
+<div class="toast" id="toast"></div>
+<div class="modalback" id="modal"><section class="modal"><div class="modalhead"><div><h2>Result revisions</h2><p>Confusion matrix · actual browser runs plus illustrative earlier versions</p></div><button class="close" id="closeModal">×</button></div><div class="revbody" id="revbody"></div></section></div>
+<div class="modalback" id="notebookModal"><section class="modal notebook-modal"><div class="modalhead"><div><h2 id="notebookTitle">Gathered notebook preview</h2><p id="notebookSubtitle"></p></div><button class="close" id="closeNotebook" aria-label="Close preview">×</button></div><div class="nbpreview-scroll" id="notebookPreview"></div><div class="modalfoot"><span class="footnote">Preview only; no Jupyter kernel is created.</span><button class="btn secondary" id="notebookCopyBtn">Copy code</button><button class="btn primary" id="notebookDownloadBtn">Download .ipynb</button></div></section></div><script>const PYODIDE_VERSION='v314.0.7';
+const PYODIDE_BASE='https://cdn.jsdelivr.net/pyodide/v314.0.7/full/';
+const cells=[
+ {id:'load',n:'In [8]',code:'import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.metrics import confusion_matrix\n\n# Small local chocolate sample; no external CSV needed\nrows = [\n    ("Maker 01", "Ghana", "45%", 2), ("Maker 02", "Peru", "50%", 2),\n    ("Maker 03", "Ecuador", "52%", 2), ("Maker 04", "Ghana", "55%", 2),\n    ("Maker 05", "Peru", "58%", 2), ("Maker 06", "Ecuador", "60%", 2),\n    ("Maker 07", "Ghana", "55%", 2), ("Maker 08", "Peru", "58%", 2),\n    ("Maker 09", "Ecuador", "62%", 3), ("Maker 10", "Ghana", "65%", 3),\n    ("Maker 11", "Peru", "68%", 3), ("Maker 12", "Ecuador", "70%", 3),\n    ("Maker 13", "Ghana", "72%", 3), ("Maker 14", "Peru", "75%", 3),\n    ("Maker 15", "Ecuador", "65%", 3), ("Maker 16", "Ghana", "72%", 3),\n    ("Maker 17", "Peru", "78%", 4), ("Maker 18", "Ecuador", "80%", 4),\n    ("Maker 19", "Ghana", "82%", 4), ("Maker 20", "Peru", "85%", 4),\n    ("Maker 21", "Ecuador", "88%", 4), ("Maker 22", "Ghana", "90%", 4),\n    ("Maker 23", "Peru", "80%", 4), ("Maker 24", "Ecuador", "85%", 4),\n]\ndf = pd.DataFrame(rows, columns=["Company", "Origin", "Cocoa Percent", "Rating"])',deps:[],vars:['df'],note:'Load sample dataset'},
+ {id:'preview',n:'In [9]',code:'df.head()',deps:['load'],out:'table',note:'Preview table'},
+ {id:'normalize',n:'In [10]',code:'def normalizeIt(value):\n    return float(value.strip("%")) / 100',deps:[],vars:['normalizeIt'],note:'Helper function'},
+ {id:'clean',n:'In [11]',code:'df["Cocoa Percent"] = df["Cocoa Percent"].apply(normalizeIt)',deps:['load','normalize'],vars:['df'],note:'Normalize cocoa percent'},
+ {id:'rating',n:'In [14]',code:'df["Rating"] = df["Rating"].astype(int)\n# rating values corrected after first model run',deps:['load'],vars:['df'],note:'Correct rating values'},
+ {id:'hist',n:'In [12]',code:'quality_counts = df["Rating"].value_counts().sort_index()\nquality_counts.to_dict()',deps:['load','rating'],vars:['quality_counts'],out:'chart',note:'Rating distribution'},
+ {id:'features',n:'In [15]',code:'X = df[["Cocoa Percent"]]\ny = df["Rating"]',deps:['clean','rating'],vars:['X','y'],note:'Prepare features'},
+ {id:'split',n:'In [16]',code:'X_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.25, random_state=42, stratify=y)',deps:['features'],vars:['X_train','X_test','y_train','y_test'],note:'Train/test split'},
+ {id:'model',n:'In [19]',code:'dtree = DecisionTreeClassifier(max_depth=12, random_state=42)\ndtree.fit(X_train, y_train)',deps:['split'],vars:['dtree'],note:'Decision tree model'},
+ {id:'pred',n:'In [20]',code:'predictions = dtree.predict(X_test)',deps:['model','split'],vars:['predictions'],out:'metrics',note:'Predictions'},
+ {id:'conf',n:'In [21]',code:'confusion_matrix(y_test, predictions, labels=[2, 3, 4])',deps:['pred'],out:'matrix',note:'Confusion matrix'},
+ {id:'debug',n:'In [22]',code:'print("rows in model input:", len(X))',deps:['features'],out:'console',note:'Debug output'}
+];
+const targets=[{id:'pred',label:'predictions',type:'Variable'},{id:'hist',label:'Rating distribution',type:'Chart'},{id:'conf',label:'Confusion matrix',type:'Output'},{id:'preview',label:'Data preview',type:'Table'},{id:'debug',label:'Debug output',type:'Console'}];
+const sampleRevisions=[
+ {time:'Preset example · current',depth:12,sample:true,cm:[['12','4','1'],['3','31','6'],['1','5','18']]},
+ {time:'Preset example · 4 minutes earlier',depth:6,sample:true,cm:[['13','3','1'],['2','34','4'],['1','4','19']]},
+ {time:'Preset example · 17 minutes earlier',depth:3,sample:true,cm:[['11','5','1'],['4','29','7'],['2','6','16']]}
+];
+let selected=new Set(),selectedRunByCell=new Map(),edited=new Map(),runOutputs=new Map(),staleCells=new Set(),liveRevisions=[];
+let pyodide=null,pyNamespace=null,analysisNamespace=null,runtimePromise=null,isBusy=false,capturedOut=[],capturedErr=[];
+let executionLog=[],latestBindings=new Map(),nextRunId=1,nextExecutionCount=1,currentSessionId=newSessionId();
+const LOG_STORAGE_KEY='gather.executionLog.v1';
+const analyzerSource=[
+'import ast, json',
+'class _RevibeAnalyzer(ast.NodeVisitor):',
+'    def __init__(self):',
+'        self.reads=set(); self.writes=set(); self.bound=set()',
+'    def visit_Name(self,node):',
+'        if isinstance(node.ctx,ast.Load):',
+'            if node.id not in self.bound: self.reads.add(node.id)',
+'        elif isinstance(node.ctx,(ast.Store,ast.Param)):',
+'            self.writes.add(node.id); self.bound.add(node.id)',
+'    def _root(self,node):',
+'        while isinstance(node,(ast.Attribute,ast.Subscript)): node=node.value',
+'        return node.id if isinstance(node,ast.Name) else None',
+'    def _target(self,node):',
+'        if isinstance(node,ast.Name): self.writes.add(node.id); self.bound.add(node.id)',
+'        elif isinstance(node,(ast.Tuple,ast.List)):',
+'            for item in node.elts: self._target(item)',
+'        elif isinstance(node,ast.Starred): self._target(node.value)',
+'        elif isinstance(node,ast.Attribute):',
+'            self.visit(node.value); root=self._root(node)',
+'            if root: self.writes.add(root); self.bound.add(root)',
+'        elif isinstance(node,ast.Subscript):',
+'            self.visit(node.value); self.visit(node.slice); root=self._root(node)',
+'            if root: self.writes.add(root); self.bound.add(root)',
+'    def visit_Assign(self,node):',
+'        self.visit(node.value)',
+'        for target in node.targets: self._target(target)',
+'    def visit_AnnAssign(self,node):',
+'        if node.annotation: self.visit(node.annotation)',
+'        if node.value: self.visit(node.value)',
+'        self._target(node.target)',
+'    def visit_AugAssign(self,node):',
+'        if isinstance(node.target,ast.Name) and node.target.id not in self.bound: self.reads.add(node.target.id)',
+'        else: self.visit(node.target)',
+'        self.visit(node.value); self._target(node.target)',
+'    def visit_NamedExpr(self,node): self.visit(node.value); self._target(node.target)',
+'    def visit_For(self,node):',
+'        self.visit(node.iter); self._target(node.target)',
+'        for item in node.body: self.visit(item)',
+'        for item in node.orelse: self.visit(item)',
+'    visit_AsyncFor=visit_For',
+'    def visit_With(self,node):',
+'        for item in node.items:',
+'            self.visit(item.context_expr)',
+'            if item.optional_vars: self._target(item.optional_vars)',
+'        for item in node.body: self.visit(item)',
+'    visit_AsyncWith=visit_With',
+'    def _visit_function_header(self,node):',
+'        for item in node.decorator_list: self.visit(item)',
+'        for item in node.args.defaults: self.visit(item)',
+'        for item in node.args.kw_defaults:',
+'            if item: self.visit(item)',
+'        if node.returns: self.visit(node.returns)',
+'        self.writes.add(node.name); self.bound.add(node.name)',
+'    visit_FunctionDef=_visit_function_header',
+'    visit_AsyncFunctionDef=_visit_function_header',
+'    def visit_Lambda(self,node):',
+'        for item in node.args.defaults: self.visit(item)',
+'        for item in node.args.kw_defaults:',
+'            if item: self.visit(item)',
+'    def visit_Import(self,node):',
+'        for item in node.names:',
+'            name=item.asname or item.name.split(\".\")[0]',
+'            self.writes.add(name); self.bound.add(name)',
+'    def visit_ImportFrom(self,node):',
+'        for item in node.names:',
+'            if item.name != \"*\":',
+'                name=item.asname or item.name',
+'                self.writes.add(name); self.bound.add(name)',
+'    def visit_Call(self,node):',
+'        self.visit(node.func)',
+'        for item in node.args: self.visit(item)',
+'        for item in node.keywords: self.visit(item.value)',
+'        inplace=any(item.arg=="inplace" and isinstance(item.value,ast.Constant) and item.value.value is True for item in node.keywords)',
+'        mutators={"append","extend","insert","pop","remove","clear","sort","reverse","update","setdefault","add","discard","difference_update","intersection_update","symmetric_difference_update"}',
+'        if isinstance(node.func,ast.Attribute) and (inplace or node.func.attr in mutators):',
+'            root=self._root(node.func.value)',
+'            if root: self.writes.add(root); self.bound.add(root)',
+'    def visit_ClassDef(self,node):',
+'        for item in node.decorator_list: self.visit(item)',
+'        for item in node.bases: self.visit(item)',
+'        for item in node.keywords: self.visit(item.value)',
+'        self.writes.add(node.name); self.bound.add(node.name)',
+'        for item in node.body: self.visit(item)',
+'def _revibe_analyze(source):',
+'    visitor=_RevibeAnalyzer(); visitor.visit(ast.parse(source))',
+'    return {\"reads\":sorted(visitor.reads),\"writes\":sorted(visitor.writes)}'
+].join('\n');
+function esc(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+function cellSource(c){return edited.has(c.id)?edited.get(c.id):c.code}
+function newSessionId(){return 'session-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
+function cellById(id){return cells.find(c=>c.id===id)}
+function logById(id){return executionLog.find(r=>r.runId===Number(id))}
+function latestAttempt(id){for(let i=executionLog.length-1;i>=0;i--)if(executionLog[i].cellId===id)return executionLog[i];return null}
+function latestSuccessfulRun(id){for(let i=executionLog.length-1;i>=0;i--)if(executionLog[i].cellId===id&&!executionLog[i].error)return executionLog[i];return null}
+function currentSuccessfulRun(id){const run=latestAttempt(id);return run&&!run.error?run:null}
+function hydrateExecutionLog(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(LOG_STORAGE_KEY)||'[]');
+  if(Array.isArray(saved)){
+   executionLog=saved.filter(r=>r&&Number.isFinite(Number(r.runId))).slice(-1500);
+   executionLog.forEach(r=>{r.runId=Number(r.runId);r.executionCount=Number(r.executionCount)||r.runId;nextRunId=Math.max(nextRunId,r.runId+1);runOutputs.set(r.cellId,{text:r.text||'',error:!!r.error,runId:r.runId,stdout:r.stdout||'',stderr:r.stderr||'',result:r.result||'',errorInfo:r.errorInfo||null})})
+  }
+ }catch{}
+ liveRevisions=executionLog.filter(r=>r.cellId==='conf'&&!r.error).slice(-5).reverse().map(revisionFromRun)
+}
+function persistExecutionLog(){try{localStorage.setItem(LOG_STORAGE_KEY,JSON.stringify(executionLog))}catch{try{localStorage.setItem(LOG_STORAGE_KEY,JSON.stringify(executionLog.slice(-300)))}catch{}}}
+function output(c){if(c.out==='chart')return '<div class=\"chart\">'+[28,45,62,80,70,49,32,22,15].map(h=>'<i class=\"bar\" style=\"height:'+h+'%\"></i>').join('')+'</div><div class=\"chartaxis\"></div>';if(c.out==='table')return '<table class=\"table\"><tr><th>Company</th><th>Origin</th><th>Cocoa %</th><th>Rating</th></tr><tr><td>Maker 01</td><td>Ghana</td><td>45%</td><td>2</td></tr><tr><td>Maker 02</td><td>Peru</td><td>50%</td><td>2</td></tr></table>';if(c.out==='metrics')return '<div class=\"metricrow\"><div class=\"metric\"><strong>Sample</strong>prediction output</div><div class=\"metric\"><strong>24 rows</strong>illustrative data</div></div>';if(c.out==='matrix')return matrixHTML([['12','4','1'],['3','31','6'],['1','5','18']]);if(c.out==='console')return '<div style=\"font:10px Consolas;color:#73817d\">illustrative output · run to replace</div>';return ''}
+function matrixHTML(rows){return '<table class=\"table matrix\"><tr><th></th><th>Predicted 2</th><th>Predicted 3</th><th>Predicted 4</th></tr>'+rows.map((row,i)=>'<tr><th>Actual '+(i+2)+'</th>'+row.map(v=>'<td>'+esc(v)+'</td>').join('')+'</tr>').join('')+'</table>'}
+function legacyClosure(id){const found=new Set();function visit(x){if(found.has(x))return;found.add(x);const c=cellById(x);if(c)c.deps.forEach(visit)}visit(id);return found}
+function legacySliceCells(ids,revision){const active=new Set();(ids||[]).forEach(x=>legacyClosure(x).forEach(y=>active.add(y)));return cells.filter(c=>active.has(c.id)).map(c=>({cell:c,code:codeFor(c,revision),run:null}))}
+function codeFor(c,revision){if(revision&&revision.codeById&&revision.codeById[c.id]!==undefined)return revision.codeById[c.id];if(c.id==='model'&&revision&&revision.depth!==undefined)return cellSource(c).replace(/max_depth\s*=\s*\d+/,'max_depth='+revision.depth);return cellSource(c)}
+function gatheredRuns(targetRunIds){
+ const ordered=[],visited=new Set(),visiting=new Set();
+ function visit(id){id=Number(id);if(visited.has(id)||visiting.has(id))return;const run=logById(id);if(!run||run.error)return;visiting.add(id);(run.parents||[]).forEach(parent=>visit(parent.runId));visiting.delete(id);visited.add(id);ordered.push(run)}
+ (targetRunIds||[]).filter(x=>x!==undefined&&x!==null).forEach(visit);return ordered
+}
+function selectedRunIds(ids){return (ids||Array.from(selected)).map(id=>selectedRunByCell.get(id)||((currentSuccessfulRun(id)||{}).runId)).filter(x=>x!==undefined&&x!==null)}
+function sliceCells(ids,revision){
+ if(revision&&revision.runId)return gatheredRuns([revision.runId]).map(run=>({cell:cellById(run.cellId),code:run.source,run})).filter(x=>x.cell);
+ if(revision&&revision.sample)return legacySliceCells(ids||['conf'],revision);
+ return gatheredRuns(selectedRunIds(ids)).map(run=>({cell:cellById(run.cellId),code:run.source,run})).filter(x=>x.cell)
+}
+function activeIds(ids){return new Set(sliceCells(ids||Array.from(selected)).map(x=>x.cell.id))}
+function setRuntimeStatus(text,kind){const el=document.getElementById('runtimeStatus');el.textContent=text;el.className='runtime-status '+(kind||'')}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function hasAncestorCell(runId,targetCell,seen){const mark=seen||new Set();if(mark.has(Number(runId)))return false;mark.add(Number(runId));const run=logById(runId);if(!run)return false;if(run.cellId===targetCell)return true;return (run.parents||[]).some(p=>hasAncestorCell(p.runId,targetCell,mark))}
+function markStaleFrom(id){cells.forEach(c=>{const run=latestSuccessfulRun(c.id);if(c.id===id||(run&&hasAncestorCell(run.runId,id)))staleCells.add(c.id)});document.querySelectorAll('.cell').forEach(el=>{const stale=staleCells.has(el.dataset.id);el.classList.toggle('stale',stale);const state=el.querySelector('.cell-state');if(state)state.textContent=stale?'OUTPUT STALE':''})}
+function outputHtml(c){
+ const r=runOutputs.get(c.id),stale=staleCells.has(c.id);
+ const title=r?(r.error?'Python error · run #'+r.runId:(stale?'Stale output · run #'+r.runId:'Run #'+r.runId+' · browser Python')):stale?'Stale output · rerun to refresh':'Illustrative saved output · run to replace';
+ let body;if(r)body='<pre class=\"python-output '+(r.error?'error':'')+'\">'+esc(r.text||'(Ran successfully; no displayed value)')+'</pre>';else if(c.out)body=output(c);else body='<div class=\"stale-note\">Code changed. Run this cell or choose Run all to refresh its result.</div>';
+ if(stale&&!r&&c.out)body='<div class=\"stale-note\">Code changed. This saved sample may no longer match.</div>'+body;
+ if(c.out)return '<div class=\"out result '+(selected.has(c.id)?'active':'')+'\" data-select=\"'+c.id+'\" role=\"button\" tabindex=\"0\" aria-pressed=\"'+selected.has(c.id)+'\" aria-label=\"Select '+esc(c.note)+' result\"><div class=\"outlabel\">'+title+' <span style=\"float:right;color:#9aa5a2\">'+(selected.has(c.id)?'✓ selected':'↗ select result')+'</span></div>'+body+'</div>';
+ if(r||stale)return '<div class=\"cell-run-output\"><div class=\"outlabel\">'+title+'</div>'+body+'</div>';return ''
+}
+function resizeEditors(){document.querySelectorAll('.editor').forEach(el=>{el.style.height='auto';el.style.height=Math.max(48,el.scrollHeight)+'px'})}
+function setBusy(value){isBusy=value;document.getElementById('runAllBtn').disabled=value;document.querySelectorAll('.run-cell,.editor').forEach(el=>el.disabled=value)}
+function renderExecutionLog(){
+ const box=document.getElementById('executionLog');if(!box)return;
+ document.getElementById('logCount').textContent=executionLog.length+' run'+(executionLog.length===1?'':'s');
+ if(!executionLog.length){box.innerHTML='<div class=\"log-empty\">No runs yet. Run a cell or choose “Run all cells” to create the first execution record.</div>';return}
+ const visible=executionLog.slice(-40).reverse(),selectedRun=Array.from(selectedRunByCell.values()).at(-1);
+ box.innerHTML=visible.map(run=>{
+  const c=cellById(run.cellId),parents=run.parents||[];
+  const vars=(run.reads&&run.reads.length?'<span>read: '+esc(run.reads.join(', '))+'</span>':'<span>read: —</span>')+(run.writes&&run.writes.length?'<span>wrote: '+esc(run.writes.join(', '))+'</span>':'');
+  const from=parents.map(p=>'<span class=\"producer\">'+esc(p.variable)+' ← run #'+esc(p.runId)+'</span>').join('');
+  return '<article class=\"log-run '+(run.error?'failed ':'')+(selectedRun===run.runId?'picked':'')+'\"><div class=\"log-top\"><strong>Run #'+run.runId+'</strong><time>'+esc(new Date(run.time).toLocaleString())+'</time><span class=\"log-cell\">'+esc(c?c.note:run.cellId)+'</span><span class=\"log-state '+(run.error?'failed':'')+'\">'+(run.error?'failed':'success')+'</span>'+(!run.error?'<button class=\"log-select\" data-select-run=\"'+run.runId+'\">Gather slice</button>':'')+'</div><div class=\"log-vars\">'+vars+from+'</div><details class=\"log-detail\"><summary>Recorded source and output · '+esc(run.sessionId)+'</summary><pre>'+esc(run.source)+'</pre><pre class=\"'+(run.error?'error':'')+'\">'+esc(run.text||'(No displayed value)')+'</pre></details></article>'
+ }).join('');
+ box.querySelectorAll('[data-select-run]').forEach(button=>button.onclick=()=>chooseRun(Number(button.dataset.selectRun)))
+}
+function render(){
+ const active=activeIds();
+ document.getElementById('cells').innerHTML=cells.map(c=>{
+  const sel=selected.has(c.id),source=cellSource(c),st=staleCells.has(c.id);
+  return '<article class=\"cell '+(active.has(c.id)?'dep ':'')+(sel?'selected ':'')+(selected.size&&!active.has(c.id)?'dim ':'')+(st?'stale':'')+'\" data-id=\"'+c.id+'\"><div class=\"celltop\"><span class=\"run\">'+c.n+'</span><span>'+esc(c.note)+'</span><span class=\"cell-state\">'+(st?'OUTPUT STALE':'')+'</span>'+(active.has(c.id)?'<span class=\"tag\">IN RECORDED SLICE</span>':'')+'<button class=\"run-cell\" data-run=\"'+c.id+'\" '+(isBusy?'disabled':'')+'>▶ Run</button></div><textarea class=\"editor\" data-editor=\"'+c.id+'\" aria-label=\"Python code for '+esc(c.note)+'\" spellcheck=\"false\" '+(isBusy?'disabled':'')+'>'+esc(source)+'</textarea>'+outputHtml(c)+'</article>'
+ }).join('');
+ document.querySelectorAll('.editor').forEach(el=>{el.addEventListener('input',()=>{edited.set(el.dataset.editor,el.value);markStaleFrom(el.dataset.editor);resizeEditors()});el.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();const b=el.closest('.cell').querySelector('[data-run]');if(b)b.click()}})});
+ document.querySelectorAll('.run-cell').forEach(el=>el.addEventListener('click',()=>runCell(el.dataset.run)));
+ document.querySelectorAll('.result').forEach(el=>{el.addEventListener('click',()=>toggle(el.dataset.select));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(el.dataset.select)}})});
+ document.getElementById('targets').innerHTML=targets.map(t=>'<div class=\"target '+(selected.has(t.id)?'checked':'')+'\" data-target=\"'+t.id+'\" role=\"checkbox\" aria-checked=\"'+selected.has(t.id)+'\" tabindex=\"0\"><span class=\"checkbox\">'+(selected.has(t.id)?'✓':'')+'</span><span>'+t.label+'</span><small>'+t.type+'</small></div>').join('');
+ document.querySelectorAll('.target').forEach(el=>{el.addEventListener('click',()=>toggle(el.dataset.target));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(el.dataset.target)}})});
+ document.getElementById('selectedCount').textContent=selected.size+' selected';document.getElementById('gatherBtn').disabled=!selected.size;document.getElementById('copyBtn').disabled=!selected.size;document.getElementById('clearBtn').disabled=!selected.size;
+ const p=document.getElementById('preview');
+ if(selected.size){
+  const rows=sliceCells(Array.from(selected)),names=Array.from(selected).map(id=>{const c=cellById(id);return c?c.note:id}).join(', ');p.classList.add('show');
+  if(rows.length)p.innerHTML='<div class=\"slice-summary\"><strong>'+rows.length+' recorded run snapshots</strong><span>for '+esc(names)+' · linked by variable versions</span></div>'+rows.map((x,i)=>'<div class=\"sliceitem\"><span class=\"idx\">'+String(i+1).padStart(2,'0')+'</span>run #'+x.run.runId+' · '+esc(x.cell.note)+' · '+esc(x.code.split('\n')[0])+'</div>').join('');
+  else p.innerHTML='<div class=\"slice-summary\"><strong>No successful run selected</strong><span>Run the selected cell first, then the gatherer can follow its recorded variable history.</span></div>'
+ }else{p.classList.remove('show');p.innerHTML=''}
+ renderExecutionLog();resizeEditors()
+}
+function toggle(id,runId){if(selected.has(id)){selected.delete(id);selectedRunByCell.delete(id)}else{selected.add(id);const run=runId?logById(runId):currentSuccessfulRun(id);if(run&&!run.error)selectedRunByCell.set(id,run.runId);else selectedRunByCell.delete(id)}render()}
+function chooseRun(runId){const run=logById(runId);if(!run||run.error)return;selected.clear();selectedRunByCell.clear();selected.add(run.cellId);selectedRunByCell.set(run.cellId,run.runId);render()}
+function selectedCode(revision){return sliceCells(Array.from(selected),revision).map(x=>x.code).join('\n\n')}
+function notebookOutputs(run){
+ if(!run)return [];const outputs=[];
+ if(run.errorInfo){outputs.push({output_type:'error',ename:run.errorInfo.ename||'Error',evalue:run.errorInfo.evalue||'',traceback:run.errorInfo.traceback||[]});return outputs}
+ if(run.stdout)outputs.push({output_type:'stream',name:'stdout',text:run.stdout});
+ if(run.stderr)outputs.push({output_type:'stream',name:'stderr',text:run.stderr});
+ if(run.result)outputs.push({output_type:'execute_result',execution_count:run.executionCount,data:{'text/plain':run.result},metadata:{}});
+ return outputs
+}
+function makeNotebook(revision){
+ const ids=revision?['conf']:Array.from(selected),rows=sliceCells(ids,revision);
+ return {cells:rows.map((x,i)=>({cell_type:'code',execution_count:x.run?x.run.executionCount:null,id:x.run?'run-'+x.run.runId:'sample-'+x.cell.id+'-'+i,metadata:{},outputs:notebookOutputs(x.run),source:x.code})),metadata:{kernelspec:{display_name:'Python 3',language:'python',name:'python3'},language_info:{name:'python',version:'3'}},nbformat:4,nbformat_minor:5}
+}
+function openNotebook(revision){
+ const ids=revision?['conf']:Array.from(selected);if(!ids.length){showToast('Select a result first.');return}
+ const rows=sliceCells(ids,revision);if(!rows.length){showToast('No successful run was recorded for this selection. Run it first, then gather.');return}
+ const names=ids.map(id=>{const c=cellById(id);return c?c.note:id});
+ document.getElementById('notebookTitle').textContent=revision?'Recovered version preview':'Gathered notebook preview';
+ document.getElementById('notebookSubtitle').textContent=rows.length+' recorded run snapshots · '+names.join(', ')+(revision?' · '+revision.time:'');
+ const chips=names.map(x=>'<span class=\"result-chip\">'+esc(x)+'</span>').join('');
+ const targetsForPreview=new Set(revision&&revision.runId?[Number(revision.runId)]:selectedRunIds(Array.from(selected)));
+ const cellsHtml=rows.map((x,i)=>{
+  const snap=x.run&&targetsForPreview.has(x.run.runId);
+  const outputBlock=snap?'<div class=\"preview-output\"><div class=\"outlabel\">Output recorded in run #'+x.run.runId+'</div><pre class=\"python-output '+(x.run.error?'error':'')+'\">'+esc(x.run.text||'(Ran successfully; no displayed value)')+'</pre></div>':'';
+  return '<article class=\"preview-cell\"><div class=\"preview-cell-head\"><span>In ['+(x.run?x.run.executionCount:' ')+' ]</span><span>Cell '+(i+1)+' of '+rows.length+' · '+esc(x.cell.note)+'</span><span class=\"preview-order\">'+(x.run?'run #'+x.run.runId:'illustrative')+'</span></div><pre class=\"preview-code\">'+esc(x.code)+'</pre>'+outputBlock+'</article>'
+ }).join('');
+ document.getElementById('notebookPreview').innerHTML='<div class=\"preview-meta\"><div><strong>Selected result'+(ids.length>1?'s':'')+'</strong><div class=\"result-chips\">'+chips+'</div></div><span class=\"count\">'+rows.length+' cells</span></div><div class=\"export-note\">The gather uses recorded run-to-run variable links and exact source snapshots. The .ipynb includes captured outputs and execution counts; imported packages may need installation in Jupyter.</div>'+cellsHtml;
+ document.getElementById('notebookModal').classList.add('open');document.getElementById('notebookDownloadBtn').onclick=()=>downloadNotebook(revision);
+ document.getElementById('notebookCopyBtn').onclick=async()=>{const code=rows.map(x=>x.code).join('\n\n');try{await navigator.clipboard.writeText(code);showToast('Recorded code snapshots copied to clipboard.')}catch{showToast('Clipboard access is blocked here. Use Download .ipynb instead.')}}
+}
+function selectedRunIdsForCurrent(){return selectedRunIds(Array.from(selected))}
+function downloadNotebook(revision){const notebook=makeNotebook(revision);const blob=new Blob([JSON.stringify(notebook,null,2)],{type:'application/x-ipynb+json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='chocolate-analysis-gathered.ipynb';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('Downloaded an .ipynb with recorded code snapshots and outputs.')}
+async function ensureRuntime(){
+ if(location.protocol==='file:')throw new Error('Open this demo with start-gather-demo.cmd so the bundled Python runtime can load.');
+ if(pyodide)return pyodide;if(runtimePromise)return runtimePromise;setRuntimeStatus('Loading Python runtime…','loading');
+ runtimePromise=(async()=>{
+  if(!window.loadPyodide){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=PYODIDE_BASE+'pyodide.js';s.onload=resolve;s.onerror=()=>reject(new Error('Could not load Pyodide. Check the internet connection and retry.'));document.head.appendChild(s)})}
+  pyodide=await window.loadPyodide({indexURL:PYODIDE_BASE});pyNamespace=pyodide.runPython('dict()');analysisNamespace=pyodide.runPython('dict()');
+  await pyodide.runPythonAsync(analyzerSource,{globals:analysisNamespace});
+  pyodide.setStdout({batched:text=>capturedOut.push(text)});pyodide.setStderr({batched:text=>capturedErr.push(text)});setRuntimeStatus('Python ready','ready');return pyodide
+ })().catch(e=>{runtimePromise=null;setRuntimeStatus('Python could not start · check internet','error');throw e});
+ return runtimePromise
+}
+function pythonRepr(result){
+ if(result===undefined||result===null)return '';let reprProxy;
+ try{pyNamespace.set('__revibe_result__',result);reprProxy=pyodide.runPython('repr(__revibe_result__)',{globals:pyNamespace});return reprProxy&&typeof reprProxy.toJs==='function'?reprProxy.toJs():String(reprProxy)}
+ finally{try{pyNamespace.delete('__revibe_result__')}catch{}if(reprProxy&&typeof reprProxy.destroy==='function')reprProxy.destroy();if(result&&typeof result.destroy==='function')result.destroy()}
+}
+function analyzeCode(source){
+ analysisNamespace.set('__revibe_source__',source);const value=pyodide.runPython('json.dumps(_revibe_analyze(__revibe_source__))',{globals:analysisNamespace});
+ try{return JSON.parse(value&&typeof value.toJs==='function'?value.toJs():String(value))}finally{if(value&&typeof value.destroy==='function')value.destroy()}
+}
+async function executeCell(c,code){
+ await ensureRuntime();setRuntimeStatus('Loading imports for '+c.n+'…','loading');capturedOut=[];capturedErr=[];await pyodide.loadPackagesFromImports(code);
+ const result=await pyodide.runPythonAsync(code,{globals:pyNamespace}),repr=pythonRepr(result),stdout=capturedOut.join(''),stderr=capturedErr.join('');
+ return {stdout,stderr,result:repr,text:stdout+stderr+(repr?((stdout||stderr)?'\n':'')+repr:'')}
+}
+function errorRecord(error){const message=error&&error.message?error.message:String(error);return {ename:error&&error.name?error.name:'PythonError',evalue:message,traceback:message.split('\n')}}
+async function executeAndRecord(c){
+ const code=cellSource(c);let analysis={reads:[],writes:[]},parents=[],success=false,details=null,result={stdout:'',stderr:'',result:'',text:''};
+ try{
+  await ensureRuntime();analysis=analyzeCode(code);const parentMap=new Map();
+  analysis.reads.forEach(variable=>{const producer=latestBindings.get(variable);if(producer)parentMap.set(variable+'|'+producer.runId,{variable,runId:producer.runId})});
+  parents=Array.from(parentMap.values());result=await executeCell(c,code);success=true
+ }catch(error){details=errorRecord(error);const stdout=capturedOut.join(''),stderr=capturedErr.join('');result={stdout,stderr,result:'',text:stdout+stderr+(stdout||stderr?'\n':'')+details.evalue}}
+ const run={runId:nextRunId++,executionCount:nextExecutionCount++,sessionId:currentSessionId,cellId:c.id,cellName:c.n,note:c.note,time:new Date().toISOString(),source:code,reads:analysis.reads,writes:analysis.writes,parents,text:result.text||'',stdout:result.stdout||'',stderr:result.stderr||'',result:result.result||'',error:!success,errorInfo:details};
+ executionLog.push(run);
+ if(success){analysis.writes.forEach(variable=>latestBindings.set(variable,run));staleCells.delete(c.id);if(selected.has(c.id))selectedRunByCell.set(c.id,run.runId);setRuntimeStatus('Python ready · ran '+c.n+' as run #'+run.runId,'ready');if(c.id==='conf')recordLiveRevision(run)}
+ else{if(selected.has(c.id))selectedRunByCell.delete(c.id);setRuntimeStatus('Python error in '+c.n+' · run #'+run.runId,'error')}
+ runOutputs.set(c.id,{text:run.text,error:run.error,runId:run.runId,stdout:run.stdout,stderr:run.stderr,result:run.result,errorInfo:run.errorInfo});persistExecutionLog();return run
+}
+function revisionFromRun(run){const rows=gatheredRuns([run.runId]),model=rows.slice().reverse().find(r=>r.cellId==='model'),source=model?model.source:'',match=source.match(/max_depth\s*=\s*(\d+)/);return {runId:run.runId,time:new Date(run.time).toLocaleTimeString(),depth:match?Number(match[1]):null,sample:false,text:run.text}}
+function recordLiveRevision(run){liveRevisions.unshift(revisionFromRun(run));if(liveRevisions.length>5)liveRevisions.pop()}
+async function runCell(id){if(isBusy)return;const c=cellById(id);if(!c)return;setBusy(true);render();try{await executeAndRecord(c)}finally{setBusy(false);render()}}
+async function runAll(){
+ if(isBusy)return;setBusy(true);
+ try{
+  await ensureRuntime();if(pyNamespace&&typeof pyNamespace.destroy==='function')pyNamespace.destroy();pyNamespace=pyodide.runPython('dict()');latestBindings.clear();currentSessionId=newSessionId();nextExecutionCount=1;cells.forEach(c=>staleCells.add(c.id));render();
+  for(let i=0;i<cells.length;i++){const c=cells[i];setRuntimeStatus('Running '+(i+1)+' of '+cells.length+' · '+c.n,'loading');const run=await executeAndRecord(c);render();if(run.error){setRuntimeStatus('Stopped at '+c.n+' · run #'+run.runId+' failed','error');return}}
+  setRuntimeStatus('Python ready · all '+cells.length+' cells ran','ready')
+ }catch(e){setRuntimeStatus('Python could not start · '+(e&&e.message?e.message:'check internet'),'error')}
+ finally{setBusy(false);render()}
+}
+function revisionMarkup(v,i){
+ const rows=sliceCells(['conf'],v),code=rows.map(x=>'<div class=\"revcell\"><span>'+(x.run?'Run #'+x.run.runId+' · '+esc(x.cell.n):esc(x.cell.n))+'</span><pre>'+esc(x.code)+'</pre></div>').join('');
+ const matrix=v.sample?matrixHTML(v.cm):'<pre class=\"python-output\">'+esc(v.text||'(No displayed value)')+'</pre>',title=v.sample?(liveRevisions.length?'Preset example':'Illustrative version'):(i===0?'Latest browser run':'Earlier browser run');
+ const setting=v.depth===null?'Model source captured':('max_depth = '+v.depth),model=rows.slice().reverse().find(x=>x.cell.id==='model'),modelSource=model?model.code.split('\n')[0]:'Model cell not in this run slice';
+ return '<article class=\"rev '+(i===0?'current':'')+'\"><div class=\"revtop\"><span>'+title+'</span><small>'+esc(v.time)+'</small></div><div class=\"revresult\"><div class=\"outlabel\">'+(v.sample?'Illustrative confusion matrix · sample output':'Actual browser execution · confusion matrix')+'</div>'+matrix+'</div><div class=\"revparam\">Model setting <strong>'+esc(setting)+'</strong></div><div class=\"rev-change\"><span>Captured model source</span><code>'+esc(modelSource)+'</code><small>'+(v.sample?'Preset example':'From the selected execution lineage')+'</small></div><div class=\"revcode\">'+code+'</div><div class=\"revactions\"><button data-copy=\"'+i+'\">Copy code</button><button data-open=\"'+i+'\">Open this version</button></div></article>'
+}
+function openRevisions(){
+ if(!selected.has('conf')){showToast('Select the confusion matrix result to browse its revisions.');return}
+ const rows=liveRevisions.length?liveRevisions.concat(sampleRevisions):sampleRevisions;document.getElementById('revbody').innerHTML=rows.map(revisionMarkup).join('');document.getElementById('modal').classList.add('open');
+ document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const v=rows[Number(b.dataset.copy)],code=sliceCells(['conf'],v).map(x=>x.code).join('\n\n');try{await navigator.clipboard.writeText(code);showToast('Selected revision code copied.')}catch{showToast('Clipboard is blocked. Open this version to download it as .ipynb.')}});
+ document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{const v=rows[Number(b.dataset.open)];document.getElementById('modal').classList.remove('open');openNotebook(v)})
+}
+function bindModal(){
+ document.getElementById('revisionsBtn').onclick=openRevisions;document.getElementById('closeModal').onclick=()=>document.getElementById('modal').classList.remove('open');document.getElementById('closeNotebook').onclick=()=>document.getElementById('notebookModal').classList.remove('open');
+ document.getElementById('notebookModal').onclick=e=>{if(e.target.id==='notebookModal')e.currentTarget.classList.remove('open')};document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('open')};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('modal').classList.remove('open');document.getElementById('notebookModal').classList.remove('open')}})
+}
+document.getElementById('runAllBtn').onclick=runAll;document.getElementById('gatherBtn').onclick=()=>openNotebook(null);document.getElementById('clearBtn').onclick=()=>{selected.clear();selectedRunByCell.clear();render()};
+document.getElementById('copyBtn').onclick=async()=>{if(!selected.size)return;const code=selectedCode();if(!code){showToast('No successful run was recorded for this selection. Run it first, then gather.');return}try{await navigator.clipboard.writeText(code);showToast('Recorded code snapshots copied to clipboard.')}catch{showToast('Clipboard is blocked. Use Preview gathered notebook to download an .ipynb.')}};
+bindModal();hydrateExecutionLog();render();if(location.protocol==='file:')setRuntimeStatus('Open start-gather-demo.cmd to run Python','error');
+</script></body></html>
